@@ -121,7 +121,7 @@
 
                 if (JogadorPerdeu)
                 {
-                    Console.WriteLine($"Voce perdeuu a palavra escolhida era: {palavraEscolhida}");
+                    Console.WriteLine($"Voce perdeuu a palavra escolalalhida era: {palavraEscolhida}");
                     Console.ReadLine();
                 }
 
