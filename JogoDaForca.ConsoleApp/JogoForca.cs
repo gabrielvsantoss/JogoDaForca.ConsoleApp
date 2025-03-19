@@ -5,6 +5,15 @@ namespace JogoDaForca.ConsoleApp
     public class JogoForca
     {
         public static string palavraSecreta;
+        public static char[] letrasEncontradas;
+        public static int quantidadeDeErros;
+
+        public static void IniciarJogo()
+        {
+            SortearPalavraSecreta();
+
+            ConfigurarLetrasEncontradas();
+        }
 
         public static void SortearPalavraSecreta()
         {
@@ -50,29 +59,26 @@ namespace JogoDaForca.ConsoleApp
             palavraSecreta = palavras[indiceEscolhido];
         }
 
-        public static char[] ConfigurarArrayLetrasEncontradas() 
+        public static void ConfigurarLetrasEncontradas() 
         {
             //inicio - input
-            char[] letrasEncontradas = new char[palavraSecreta.Length];
+            letrasEncontradas = new char[palavraSecreta.Length];
 
             //meio - processamento
             for (int CaractereAtual = 0; CaractereAtual < letrasEncontradas.Length; CaractereAtual++)
             {
                 letrasEncontradas[CaractereAtual] = '_';
-            }
-
-            //fim - output
-            return letrasEncontradas;
+            }                        
         }
 
-        public static void ExibirForca(int QuantidadeDeErros, char[] letrasEncontradas)
+        public static void ExibirForca()
         {            
-            string cabecadodesenho = QuantidadeDeErros >= 1 ? "o" : "";
-            string troncododesenho = QuantidadeDeErros >= 2 ? "x" : "";
-            string troncoinferiordodesenho = QuantidadeDeErros >= 2 ? " x " : "";
-            string bracoesquerdododesenho = QuantidadeDeErros >= 3 ? "/" : "";
-            string bracodireitododesenho = QuantidadeDeErros >= 4 ? "\\" : "";
-            string pernasdodesenho = QuantidadeDeErros >= 5 ? "/ \\" : "";
+            string cabecadodesenho = quantidadeDeErros >= 1 ? "o" : "";
+            string troncododesenho = quantidadeDeErros >= 2 ? "x" : "";
+            string troncoinferiordodesenho = quantidadeDeErros >= 2 ? " x " : "";
+            string bracoesquerdododesenho = quantidadeDeErros >= 3 ? "/" : "";
+            string bracodireitododesenho = quantidadeDeErros >= 4 ? "\\" : "";
+            string pernasdodesenho = quantidadeDeErros >= 5 ? "/ \\" : "";
             Console.Clear();
 
             string LetrasEncontradasCompleta = string.Join(" ", letrasEncontradas);
@@ -92,12 +98,14 @@ namespace JogoDaForca.ConsoleApp
             Console.WriteLine("-------------------------------");
             Console.WriteLine($"palavra escolhida: {LetrasEncontradasCompleta}");
             Console.WriteLine($"------------------------------");
-            Console.WriteLine($"Quantidade de erros do jogador: {QuantidadeDeErros}");
+            Console.WriteLine($"Quantidade de erros do jogador: {quantidadeDeErros}");
             Console.WriteLine($"------------------------------");
         }
 
-        public static bool VerificarLetraDigitada(char[] letrasEncontradas, char chute, bool LetraFoiEncontrada)
+        public static void VerificarChute(char chute)
         {
+            bool letraFoiEncontrada = false;
+
             for (int ContadorDeCaracteres = 0; ContadorDeCaracteres < palavraSecreta.Length; ContadorDeCaracteres++)
             {
                 char CaractereAtual = palavraSecreta[ContadorDeCaracteres];
@@ -105,61 +113,42 @@ namespace JogoDaForca.ConsoleApp
                 if (chute == CaractereAtual)
                 {
                     letrasEncontradas[ContadorDeCaracteres] = CaractereAtual;
-                    LetraFoiEncontrada = true;
+                    letraFoiEncontrada = true;
                 }
             }
 
-            return LetraFoiEncontrada;
-
+            if (letraFoiEncontrada == false)            
+                quantidadeDeErros++;            
         }
 
-        public static bool LetraFoiEncontradaa(char[] letrasencontradas, bool LetraFoiEncontrada)
-        {
-            return LetraFoiEncontrada;
-        }
-
-        public static int VerificacaoDeAcertoOuErro(bool LetraFoiEncontrada, int QuantidadeDeErros)
-        {
-
-            if (LetraFoiEncontrada == false)
-            {
-                QuantidadeDeErros++;
-            }
-
-            return QuantidadeDeErros;
-
-        }
-
-        public static bool VerificacaoDeVitoria(char[] letrasEncontradas, bool JogadorGanhou, bool JogadorPerdeu, int QuantidadeDeErros)
+        public static bool JogadorGanhou()
         {
             string palavraEncontradaCompleta = String.Join("", letrasEncontradas);
 
-            JogadorGanhou = palavraEncontradaCompleta == palavraSecreta;
+            bool jogadorGanhou = palavraEncontradaCompleta == palavraSecreta;
 
-            if (JogadorGanhou)
-            {
-                Console.WriteLine($"Voce acertou a palavra escolhida {palavraSecreta}, Parabens!");
-                Console.ReadLine();
-            }
-
-            return JogadorGanhou;
-
-
+            return jogadorGanhou;
         }
 
-        public static bool VerificacaoDeDerrota(bool JogadorPerdeu, int QuantidadeDeErros)
+        public static bool JogadorPerdeu()
         {
+            bool jogadorPerdeu = quantidadeDeErros >= 5;
 
-            JogadorPerdeu = QuantidadeDeErros > 5;
-
-            if (JogadorPerdeu)
-            {
-                Console.WriteLine($"Voce perdeuu a palavra escolhida era: {palavraSecreta}");
-                Console.ReadLine();
-            }
-
-            return JogadorPerdeu;
+            return jogadorPerdeu;
         }
 
+        public static void ApresentarMensagemVitoria()
+        {
+            Console.WriteLine($"Voce acertou a palavra escolhida {palavraSecreta}, Parabens!");
+            Console.ReadLine();
+        }
+
+        public static void ApresentarMensagemDerrota()
+        {
+            Console.WriteLine($"Voce perdeu a palavra escolhida era: {palavraSecreta}");
+            Console.ReadLine();
+        }
+
+       
     }
 }

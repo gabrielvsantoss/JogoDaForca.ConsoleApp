@@ -2,39 +2,32 @@
 {
     internal class Program
     {
-        public static int idade;
-
         static void Main(string[] args)
         {
-            JogoForca.SortearPalavraSecreta();
+            JogoForca.IniciarJogo();
 
-            char[] letrasEncontradas = JogoForca.ConfigurarArrayLetrasEncontradas();
-
-            int QuantidadeDeErros = 0;
-            bool JogadorGanhou = false;
-            bool JogadorPerdeu = false;
-
-            do
+            while (true)
             {
-                JogoForca.ExibirForca(QuantidadeDeErros, letrasEncontradas);
+                JogoForca.ExibirForca();
 
-                char chute = ObterChute();
+                char chute = ObterChuteUsuario();
 
-                bool LetraFoiEncontrada = false;
+                JogoForca.VerificarChute(chute);
 
-                JogoForca.VerificarLetraDigitada(letrasEncontradas, chute, LetraFoiEncontrada);
-
-                QuantidadeDeErros = JogoForca.VerificacaoDeAcertoOuErro(LetraFoiEncontrada, QuantidadeDeErros);
-
-                JogadorGanhou = JogoForca.VerificacaoDeVitoria(letrasEncontradas, JogadorGanhou, JogadorPerdeu, QuantidadeDeErros);
-
-                JogadorPerdeu = JogoForca.VerificacaoDeDerrota(JogadorPerdeu, QuantidadeDeErros);
-
-            } while (JogadorGanhou == false && JogadorPerdeu == false);
-
+                if (JogoForca.JogadorGanhou())
+                {
+                    JogoForca.ApresentarMensagemVitoria();
+                    break;
+                }
+                else if (JogoForca.JogadorPerdeu())
+                {
+                    JogoForca.ApresentarMensagemDerrota();
+                    break;
+                }
+            } 
         }
 
-        public static char ObterChute()
+        public static char ObterChuteUsuario()
         {
             Console.Write("Digite a letra: ");
             string palavra = Console.ReadLine().ToUpper();
