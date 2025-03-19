@@ -2,10 +2,13 @@
 
 namespace JogoDaForca.ConsoleApp
 {
-    public class Forca
+    public class JogoForca
     {
-        public static string[] arraydepalavras()
+        public static string palavraSecreta;
+
+        public static void SortearPalavraSecreta()
         {
+            //inicio - input
             string[] palavras = {
                     "ABACATE",
                     "ABACAXI",
@@ -39,40 +42,31 @@ namespace JogoDaForca.ConsoleApp
                     "UVAIA"
                 };
 
-            return palavras;
-        }
-        public static int geradordeindice(string[] palavras)
-        {
-            Random geradordenumeros = new Random();
+            //meio - processamento
+            Random geradorNumeros = new Random();            
 
-            int indiceescolhido = geradordenumeros.Next(palavras.Length);
+            int indiceEscolhido = geradorNumeros.Next(palavras.Length);
 
-            return indiceescolhido;
+            palavraSecreta = palavras[indiceEscolhido];
         }
 
-        public static string  palavraEscolhidaa(string[] palavras, int indiceescolhido)
+        public static char[] ConfigurarArrayLetrasEncontradas() 
         {
-            string palavraEscolhida = palavras[indiceescolhido];
+            //inicio - input
+            char[] letrasEncontradas = new char[palavraSecreta.Length];
 
-            return palavraEscolhida;
-
-        }
-
-        public   static char[]   Alteradordecaractere(char[] letrasEncontradas)
-        {
-
+            //meio - processamento
             for (int CaractereAtual = 0; CaractereAtual < letrasEncontradas.Length; CaractereAtual++)
             {
                 letrasEncontradas[CaractereAtual] = '_';
             }
 
+            //fim - output
             return letrasEncontradas;
         }
 
-        public static string Menu(int QuantidadeDeErros, char[] letrasEncontradas)
-        {
-            string menu = "";
-
+        public static void ExibirForca(int QuantidadeDeErros, char[] letrasEncontradas)
+        {            
             string cabecadodesenho = QuantidadeDeErros >= 1 ? "o" : "";
             string troncododesenho = QuantidadeDeErros >= 2 ? "x" : "";
             string troncoinferiordodesenho = QuantidadeDeErros >= 2 ? " x " : "";
@@ -100,38 +94,22 @@ namespace JogoDaForca.ConsoleApp
             Console.WriteLine($"------------------------------");
             Console.WriteLine($"Quantidade de erros do jogador: {QuantidadeDeErros}");
             Console.WriteLine($"------------------------------");
-            return menu;
         }
 
-        public static string InteracaoComOUsuario()
+        public static bool VerificarLetraDigitada(char[] letrasEncontradas, char chute, bool LetraFoiEncontrada)
         {
-            Console.WriteLine("Digite um caractere");
-            string palavra = Console.ReadLine().ToUpper();
-
-            if (palavra.Length > 1)
+            for (int ContadorDeCaracteres = 0; ContadorDeCaracteres < palavraSecreta.Length; ContadorDeCaracteres++)
             {
-                Console.WriteLine("Informe apenas um caractere");
-                Console.ReadLine();
-            }
-
-            return palavra;
-        }
-
-        public static (char[],bool)  VerificacaoDeLetraDigitada(string palavraEscolhida, char[] letrasEncontradas, char chute, bool LetraFoiEncontrada)
-        {
-            for (int ContadorDeCaracteres = 0; ContadorDeCaracteres < palavraEscolhida.Length; ContadorDeCaracteres++)
-            {
-                char CaractereAtual = palavraEscolhida[ContadorDeCaracteres];
+                char CaractereAtual = palavraSecreta[ContadorDeCaracteres];
 
                 if (chute == CaractereAtual)
                 {
                     letrasEncontradas[ContadorDeCaracteres] = CaractereAtual;
                     LetraFoiEncontrada = true;
                 }
-
             }
 
-            return (letrasEncontradas,LetraFoiEncontrada);
+            return LetraFoiEncontrada;
 
         }
 
@@ -139,7 +117,6 @@ namespace JogoDaForca.ConsoleApp
         {
             return LetraFoiEncontrada;
         }
-
 
         public static int VerificacaoDeAcertoOuErro(bool LetraFoiEncontrada, int QuantidadeDeErros)
         {
@@ -150,34 +127,34 @@ namespace JogoDaForca.ConsoleApp
             }
 
             return QuantidadeDeErros;
-           
+
         }
 
-        public  static bool  VerificacaoDeVitoria(char[] letrasEncontradas,bool JogadorGanhou, bool JogadorPerdeu, int QuantidadeDeErros, string palavraEscolhida)
+        public static bool VerificacaoDeVitoria(char[] letrasEncontradas, bool JogadorGanhou, bool JogadorPerdeu, int QuantidadeDeErros)
         {
             string palavraEncontradaCompleta = String.Join("", letrasEncontradas);
 
-            JogadorGanhou = palavraEncontradaCompleta == palavraEscolhida;
+            JogadorGanhou = palavraEncontradaCompleta == palavraSecreta;
 
             if (JogadorGanhou)
             {
-                Console.WriteLine($"Voce acertou a palavra escolhida {palavraEscolhida}, Parabens!");
+                Console.WriteLine($"Voce acertou a palavra escolhida {palavraSecreta}, Parabens!");
                 Console.ReadLine();
             }
 
             return JogadorGanhou;
 
-            
+
         }
 
-        public static bool VerificacaoDeDerrota(bool JogadorPerdeu, int QuantidadeDeErros, string palavraEscolhida)
+        public static bool VerificacaoDeDerrota(bool JogadorPerdeu, int QuantidadeDeErros)
         {
 
             JogadorPerdeu = QuantidadeDeErros > 5;
 
             if (JogadorPerdeu)
             {
-                Console.WriteLine($"Voce perdeuu a palavra escolhida era: {palavraEscolhida}");
+                Console.WriteLine($"Voce perdeuu a palavra escolhida era: {palavraSecreta}");
                 Console.ReadLine();
             }
 

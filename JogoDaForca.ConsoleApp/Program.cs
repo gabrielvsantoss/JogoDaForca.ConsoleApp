@@ -2,35 +2,55 @@
 {
     internal class Program
     {
+        public static int idade;
+
         static void Main(string[] args)
         {
-            string[] palavras = Forca.arraydepalavras();
-            int indiceescolhido = Forca.geradordeindice(palavras);
-            string palavraEscolhida = Forca.palavraEscolhidaa(palavras, indiceescolhido);
-            char[] letrasEncontradas = new char[palavraEscolhida.Length];
-            letrasEncontradas = Forca.Alteradordecaractere(letrasEncontradas);
+            JogoForca.SortearPalavraSecreta();
+
+            char[] letrasEncontradas = JogoForca.ConfigurarArrayLetrasEncontradas();
+
             int QuantidadeDeErros = 0;
             bool JogadorGanhou = false;
             bool JogadorPerdeu = false;
 
             do
             {
-                Forca.Menu(QuantidadeDeErros, letrasEncontradas);
-                string palavra = Forca.InteracaoComOUsuario();
+                JogoForca.ExibirForca(QuantidadeDeErros, letrasEncontradas);
+
+                char chute = ObterChute();
+
                 bool LetraFoiEncontrada = false;
-                char chute = palavra[0];
 
-                (letrasEncontradas, LetraFoiEncontrada) = Forca.VerificacaoDeLetraDigitada(palavraEscolhida,letrasEncontradas,chute,LetraFoiEncontrada);
+                JogoForca.VerificarLetraDigitada(letrasEncontradas, chute, LetraFoiEncontrada);
 
-                QuantidadeDeErros = Forca.VerificacaoDeAcertoOuErro(LetraFoiEncontrada, QuantidadeDeErros);
+                QuantidadeDeErros = JogoForca.VerificacaoDeAcertoOuErro(LetraFoiEncontrada, QuantidadeDeErros);
 
-                JogadorGanhou = Forca.VerificacaoDeVitoria(letrasEncontradas, JogadorGanhou, JogadorPerdeu, QuantidadeDeErros, palavraEscolhida);
-                JogadorPerdeu = Forca.VerificacaoDeDerrota(JogadorPerdeu,QuantidadeDeErros,palavraEscolhida);
+                JogadorGanhou = JogoForca.VerificacaoDeVitoria(letrasEncontradas, JogadorGanhou, JogadorPerdeu, QuantidadeDeErros);
 
-
+                JogadorPerdeu = JogoForca.VerificacaoDeDerrota(JogadorPerdeu, QuantidadeDeErros);
 
             } while (JogadorGanhou == false && JogadorPerdeu == false);
 
+        }
+
+        public static char ObterChute()
+        {
+            Console.Write("Digite a letra: ");
+            string palavra = Console.ReadLine().ToUpper();
+
+            while (palavra.Length > 1)
+            {
+                Console.WriteLine("Informe apenas um caractere");
+                Console.ReadLine();
+
+                Console.Write("Digite a letra: ");
+                palavra = Console.ReadLine().ToUpper();
+            }
+
+            char chute = palavra[0];
+
+            return chute;
         }
     }
 }
